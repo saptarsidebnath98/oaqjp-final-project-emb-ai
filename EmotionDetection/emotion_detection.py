@@ -13,29 +13,36 @@ def emotion_detector(text_to_analyze):  # Define a function named emotion_detect
 
     # Parse the response from the API
     formatted_response = json.loads(response.text)
-
+    resultDict = {}
+    # response with status code
+    if response.status_code == 200:
     #extract the scores from the response
-    anger_score = formatted_response['emotionPredictions'][0]['emotion']['anger']
-    disgust_score = formatted_response['emotionPredictions'][0]['emotion']['disgust']
-    fear_score = formatted_response['emotionPredictions'][0]['emotion']['fear']
-    joy_score = formatted_response['emotionPredictions'][0]['emotion']['joy']
-    sadness_score = formatted_response['emotionPredictions'][0]['emotion']['sadness']
-
-    # calculate maximum value and find dominant emotion
-    scores = [anger_score, disgust_score, fear_score, joy_score, sadness_score]
-    emotions = ['anger','disgust','fear','joy','sadness']
-
-    #getting max value index
-    max_index = np.argmax(scores)
-
-    #result dictionary output format
-    resultDict = {
-    'anger': anger_score,
-    'disgust': disgust_score,
-    'fear': fear_score,
-    'joy': joy_score,
-    'sadness': sadness_score,
-    'dominant_emotion': emotions[max_index]
-    }
-
+        anger_score = formatted_response['emotionPredictions'][0]['emotion']['anger']
+        disgust_score = formatted_response['emotionPredictions'][0]['emotion']['disgust']
+        fear_score = formatted_response['emotionPredictions'][0]['emotion']['fear']
+        joy_score = formatted_response['emotionPredictions'][0]['emotion']['joy']
+        sadness_score = formatted_response['emotionPredictions'][0]['emotion']['sadness']
+        # calculate maximum value and find dominant emotion
+        scores = [anger_score, disgust_score, fear_score, joy_score, sadness_score]
+        emotions = ['anger','disgust','fear','joy','sadness']
+        #getting max value index
+        max_index = np.argmax(scores)
+        #result dictionary output format
+        resultDict = {
+        'anger': anger_score,
+        'disgust': disgust_score,
+        'fear': fear_score,
+        'joy': joy_score,
+        'sadness': sadness_score,
+        'dominant_emotion': emotions[max_index]
+        }
+    elif response.status_code == 400:
+        resultDict = {
+        'anger': None,
+        'disgust': None,
+        'fear': None,
+        'joy': None,
+        'sadness': None,
+        'dominant_emotion': None
+        }
     return resultDict  # Return the response from the API
